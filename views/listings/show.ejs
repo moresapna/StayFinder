@@ -11,7 +11,7 @@
       alt="listing_image"
     />
     <div class="card-body">
-      <p class="card-text">Owned by ~<b><i><%= listing.owner.username %></i></b></p>
+      <p class="card-text"><b>Hosted by <i><%= listing.owner.username %></i></b></p>
       <p class="card-text"><%= listing.description %></p>
       <p class="card-text">&#8377; <%= listing.price.toLocaleString("en-IN") %> for / night</p>
       <p class="card-text"><%= listing.location %></p>
@@ -41,8 +41,8 @@
   <% } %>
 
   <div class="col-8 offset-3 mb-3">
-    <hr />
     <% if (currUser) { %>
+      <hr />
       <h4>Leave a Review</h4>
       <form
         action="/listings/<%= listing._id %>/reviews"
@@ -78,12 +78,14 @@
           ></textarea>
           <div class="invalid-feedback">Please add some comment for review.</div>
         </div>
-        <button class="btn btn-outline-dark">Submit</button>
+        <button class="btn btn-outline-dark mb-3">Submit</button>
       </form>
-      <hr />
     <% } %>
 
-    <p><b>All Reviews</b></p>
+    <% if(listing.reviews.length > 0){ %>
+      <hr />
+      <p><b>All Reviews</b></p>
+    <% } %>
 
     <div class="row g-3">
       <% for(let review of listing.reviews){ %>

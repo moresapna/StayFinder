@@ -24,6 +24,11 @@ body{
     color: #222222;
 }
 
+.nav-link:hover{
+    font-weight: 600;
+    border-bottom: 3px solid black;
+}
+
 /* Footer */
 .f-info-links a{
     text-decoration: none;

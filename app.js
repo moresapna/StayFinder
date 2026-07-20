@@ -20,6 +20,7 @@ const reviewsRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 
 const MONGO_URL="mongodb://127.0.0.1:27017/AirBNB";
+// const dbUrl = process.env.ATLASDB_URL;
 
 main()
     .then(() => {
@@ -51,9 +52,9 @@ const sessionOptions = {
     },
 }
 
-app.get("/",(req,res) =>{
-    res.send("Hi, I am root");
-});
+// app.get("/",(req,res) =>{
+//     res.send("Hi, I am root");
+// });
 
 app.use(session(sessionOptions));
 app.use(flash());
