@@ -20,7 +20,6 @@ const reviewsRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 
 const MONGO_URL="mongodb://127.0.0.1:27017/AirBNB";
-// const dbUrl = process.env.ATLASDB_URL;
 
 main()
     .then(() => {
@@ -52,10 +51,6 @@ const sessionOptions = {
     },
 }
 
-// app.get("/",(req,res) =>{
-//     res.send("Hi, I am root");
-// });
-
 app.use(session(sessionOptions));
 app.use(flash());
 
@@ -70,18 +65,9 @@ app.use((req, res, next) => {
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
     res.locals.currUser = req.user;
+    res.locals.currentPath = req.originalUrl;
     next();
 });
-
-//Sample User Route
-// app.get("/demouser", async(req, res) => {
-//     let fakeUser = new User ({
-//         email: "sapna@gmail.com",
-//         username: "sapna_more",
-//     });
-//     let registeredUser = await user.register(fakeUser, "sapna@123");
-//     res.send(registeredUser);
-// });
 
 //routes 
 app.use("/listings", listingsRouter);
@@ -98,20 +84,6 @@ app.use((err,req,res,next) => {
     // res.status(statusCode).send(message);
     res.status(statusCode).render("error.ejs", {message});
 });
-
-//Sample Route to add Data in DB
-// app.get("/testListing",async(req,res) => {
-//     let sampleListing = new Listing ({
-//         title: "My New Villa",
-//         description: "BY the Beach",
-//         price: 1200,
-//         location: "Calangute, Goa",
-//         country: "India",
-//     });
-//     await sampleListing.save();
-//     console.log("sample was saved");
-//     res.send("Successful testing");
-// });
 
 app.listen(8080,() =>{
     console.log("server is listening to port 8080");

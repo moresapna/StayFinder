@@ -20,11 +20,298 @@
     border-radius: 25px;
     padding: 0.5rem 3rem 0.5rem 3rem;
   }
+
+  .suggestions-box{
+    position:absolute;
+    top:100%;
+    left:0;
+    width:100%;
+    background:#fff;
+    border:1px solid #ddd;
+    border-radius:12px;
+    box-shadow:0 6px 20px rgba(0,0,0,.15);
+    display:none;
+    overflow:hidden;
+    max-height:300px;
+    overflow-y:auto;
+    z-index:999;
+  }
+
+  .suggestion{
+      padding:12px 16px;
+      cursor:pointer;
+      border-bottom:1px solid #eee;
+  }
+
+  .suggestion:last-child{
+      border-bottom:none;
+  }
+
+  .suggestion:hover,
+  .suggestion.active{
+      background:#ff385c;
+      color:white;
+  }
+
+  .suggestion-title{
+      font-size:15px;
+  }
+
+  .highlight{
+      font-weight:bold;
+      color:#ff385c;
+  }
+
+  .suggestion.active .highlight,
+  .suggestion:hover .highlight{
+      color:white;
+  }
+
+  .active-nav{
+    font-weight:700;
+    color:#000 !important;
+  }
+
+  .search-form{
+    display:flex;
+    align-items:center;
+    gap:.5rem;
+    margin:0 auto;
+}
+
+/* ===========================================================
+   DESKTOP / TABLET (>=576px) — ORIGINAL layout, UNCHANGED.
+   Logo left, full search bar, nav links inline on the right
+   (collapsing into the standard Bootstrap hamburger below 768px,
+   exactly as before). This block is untouched from the original.
+   =========================================================== */
+@media (max-width:768px){
+
+    .container-fluid{
+        display:flex;
+        flex-wrap:wrap;
+    }
+
+    /* fixed a pre-existing bug — .search-form had no explicit
+       order (defaulted to 0) while .navbar-brand was order:1, so the
+       search bar was rendering BEFORE the logo at this width. Now the
+       logo is explicitly order:0 and the search form order:1, so logo
+       always comes first, left to right: logo -> search -> hamburger. */
+    .navbar-brand{
+        order:0;
+    }
+
+    .search-form{
+        order:1;
+    }
+
+    .navbar-toggler{
+        order:2;
+        margin-left:auto;
+    }
+
+    .container-fluid{
+        display:flex;
+        align-items:center;
+        flex-wrap:nowrap;
+    }
+
+    .search-form{
+        flex:1;
+        margin:0 .5rem;
+        width:auto;
+    }
+
+    .search-form .input-btn{
+        width:100%;
+        padding:.5rem 1rem;
+    }
+
+    .search-btn{
+        padding:0 .8rem;
+    }
+
+    .collapse.navbar-collapse{
+        order:4;
+        width:100%;
+    }
+
+    .search-form .position-relative{
+        flex:1;
+    }
+     .navbar-collapse{
+        position:absolute;
+        top:100%;
+        left:0;
+        width:100%;
+        background:white;
+        padding:1rem;
+        box-shadow:0 5px 15px rgba(0,0,0,.1);
+        z-index:1000;
+    }
+
+    .navbar-collapse .nav-link{
+        color:black !important;
+        padding:.75rem 0;
+    }
+
+    .navbar-collapse.collapsing{
+        transition: height .3s ease;
+    }
+}
+.navbar-brand{
+    margin-right:1rem;
+}
+
+.search-form{
+    width:420px;
+    margin:0 2rem;
+}
+
+.navbar-nav:first-child{
+    margin-right:auto;
+}
+
+/* ===========================================================
+   MOBILE ONLY (<576px)
+   Structure: logo -> (space) -> search icon -> hamburger menu.
+   =========================================================== */
+@media (max-width:576px){
+
+    .search-form{
+        display:none;
+    }
+
+    .container-fluid{
+        display:flex;
+        align-items:center;
+        flex-wrap:nowrap;
+    }
+
+    .navbar-brand{
+        order:0;
+        margin-right:0;
+    }
+
+    .search-toggle-btn{
+        order:1;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        width:38px;
+        height:38px;
+        border-radius:50%;
+        background:transparent;
+        color:#222;
+        border:none;
+        margin-left:auto;
+        margin-right:0;
+        font-size:1.1rem;
+    }
+
+    .search-toggle-btn:hover,
+    .search-toggle-btn:focus{
+        background:rgba(0,0,0,.06);
+    }
+
+    .navbar-toggler{
+        order:2;
+        margin-left:0;
+    }
+
+    .search-close-btn{
+        display:none;
+        border:none;
+        background:none;
+        font-size:1.3rem;
+        color:#222;
+        margin-left:.5rem;
+        align-items:center;
+        justify-content:center;
+    }
+
+    .container-fluid.search-active .navbar-brand,
+    .container-fluid.search-active .search-toggle-btn,
+    .container-fluid.search-active .navbar-toggler{
+        display:none;
+    }
+
+    .container-fluid.search-active .search-form{
+        display:flex;
+        width:100%;
+        margin:0;
+        flex:1;
+    }
+
+    .container-fluid.search-active .search-close-btn{
+        display:flex;
+    }
+
+}
+
+@media (min-width:577px){
+    .search-toggle-btn,
+    .search-close-btn{
+        display:none;
+    }
+}
+
+/* ===========================================================
+   DESKTOP ONLY (>=769px)
+   Layout: logo + search bar grouped on the left, "Homes" centered
+   in the remaining space, and Become a host / Sign up / Login on
+   the right. Mobile and tablet are completely untouched.
+   =========================================================== */
+@media (min-width:769px){
+
+    .navbar-collapse{
+        display:contents !important;
+    }
+
+    .container-fluid{
+        display:grid;
+        grid-template-columns:auto auto 1fr auto;
+        align-items:center;
+        column-gap:1.5rem;
+    }
+
+    .navbar-brand{
+        grid-column:1;
+        margin-right:0;
+    }
+
+    /* "Homes" — centered */
+    .navbar-collapse .navbar-nav:first-child{
+        grid-column:3;
+        margin-right:0;
+        justify-self:center;
+    }
+
+    /* Search bar — beside the logo */
+    .search-form{
+        grid-column:2;
+        margin:0;
+    }
+
+    /* Become a host / Sign up / Login group — right-aligned */
+    .navbar-collapse .navbar-nav.ms-auto{
+        grid-column:4;
+        margin-left:0;
+        justify-self:end;
+    }
+
+}
 </style>
 
 <nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
   <div class="container-fluid">
     <a class="navbar-brand" href="/listings"><i class="fa-solid fa-compass"></i></a>
+
+    <!-- Search icon trigger — visible on mobile (<576px) only -->
+    <button class="btn search-toggle-btn" id="openSearch" type="button" aria-label="Open search">
+      <i class="fa-solid fa-magnifying-glass"></i>
+    </button>
+
     <button
       class="navbar-toggler"
       type="button"
@@ -33,30 +320,186 @@
     >
       <span class="navbar-toggler-icon"></span>
     </button>
+
+    <!-- Search form — single shared form for all sizes -->
+    <form class="search-form" role="search" action="/listings/search" method="GET">
+      <div class="position-relative">
+          <input class="form-control me-2 input-btn"
+                type="search"
+                id="searchInput"
+                name="search"
+                placeholder="Search destination"
+                autocomplete="off">
+
+          <div id="suggestions" class="suggestions-box"></div>
+      </div>
+      <button class="btn search-btn" type="submit">
+          <i class="fa-brands fa-sistrix"></i>
+          Search
+      </button>
+  </form>
+
+    <!-- Close (x) button for the inline mobile search state -->
+    <button class="search-close-btn" id="closeMobileSearch" type="button" aria-label="Close search">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
 
       <div class="navbar-nav">
-        <a class="nav-link" href="/listings"><i class="fa-solid fa-house"></i>Homes</a>
+        <a class="nav-link <%= currentPath === '/listings' ? 'fw-bold active-nav' : '' %>" href="/listings">
+            <i class="fa-solid fa-house"></i> Homes
+        </a>
       </div>
 
       <div class="navbar-nav ms-auto">
-        <form class="d-flex" role="search">
-          <input class="form-control me-2 input-btn" type="search" placeholder="Search destination" aria-label="Search"/>
-          <button class="btn search-btn" type="submit"><i class="fa-brands fa-sistrix"></i>Search</button>
-        </form>
-      </div>
-
-      <div class="navbar-nav ms-auto">
-        <a class="nav-link" href="/listings/new">Become a host</a>
+        <a class="nav-link <%= currentPath === '/listings/new' ? 'fw-bold active-nav' : '' %>" href="/listings/new">
+          Become a host
+        </a>
         <% if(!currUser) { %>
-          <a class="nav-link" href="/signup"><b>Sign up</b></a>
-          <a class="nav-link" href="/login"><b>Log in</b></a>
+          <a class="nav-link <%= currentPath === '/signup' ? 'fw-bold active-nav' : '' %>" href="/signup">
+            Sign up
+          </a>
+          <a class="nav-link <%= currentPath === '/login' ? 'fw-bold active-nav' : '' %>" href="/login">
+            Log in
+          </a>
         <% } %>
         <% if(currUser) { %>
-          <a class="nav-link" href="/logout"><b>Log out</b></a>
+          <a class="nav-link <%= currentPath === '/logout' ? 'fw-bold active-nav' : '' %>" href="/logout">
+            Log out
+          </a>
         <% } %>
       </div>
 
     </div>
   </div>
 </nav>
+
+<script>
+  const searchInput = document.getElementById("searchInput");
+  const suggestionsBox = document.getElementById("suggestions");
+  let currentIndex = -1;
+  let suggestions = [];
+  let timer;
+  searchInput.addEventListener("input", () => {
+      clearTimeout(timer);
+      timer = setTimeout(fetchSuggestions,300);
+  });
+  async function fetchSuggestions(){
+      const value = searchInput.value.trim();
+      suggestionsBox.innerHTML="";
+      suggestionsBox.style.display="none";
+      currentIndex=-1;
+      if(value==="") return;
+      const res = await fetch(`/listings/suggestions?search=${encodeURIComponent(value)}`);
+      suggestions = await res.json();
+      if(suggestions.length===0) return;
+      suggestionsBox.style.display="block";
+      const regex = new RegExp(`(${escapeRegExp(value)})`,"ig");
+      suggestions.forEach((item)=>{
+          const div=document.createElement("div");
+          div.className="suggestion";
+          const text=item.value.replace(
+            regex,
+            `<span class="highlight">$1</span>`
+          );
+          let icon="";
+          if(item.type==="title"){
+            icon='<i class="fa-solid fa-house"></i>';
+          }
+          else if(item.type==="location"){
+            icon='<i class="fa-solid fa-location-dot"></i>';
+          }
+          else{
+            icon='<i class="fa-solid fa-earth-americas"></i>';
+          }
+          div.innerHTML=`<div class="suggestion-title">
+            ${icon}
+            ${text}
+          </div>
+          `;
+          div.onclick = () => {
+            if (item.type === "title") {
+              window.location.href = `/listings/${item._id}`;
+            } else {
+              window.location.href = `/listings/search?search=${encodeURIComponent(item.value)}`;
+            }
+          };
+          suggestionsBox.appendChild(div);
+      });
+  }
+  searchInput.addEventListener("keydown",(e)=>{
+    const items=document.querySelectorAll(".suggestion");
+      if(items.length===0) return;
+      if(e.key==="ArrowDown"){
+        e.preventDefault();
+        currentIndex++;
+        if(currentIndex>=items.length){
+          currentIndex=0;
+        }
+        updateSelection(items);
+      }
+      else if(e.key==="ArrowUp"){
+        e.preventDefault();
+        currentIndex--;
+        if(currentIndex<0){
+          currentIndex=items.length-1;
+        }
+        updateSelection(items);
+      }
+      else if(e.key==="Enter"){
+        if(currentIndex>=0){
+          e.preventDefault();
+          if (suggestions[currentIndex].type === "title") {
+            window.location.href =`/listings/${suggestions[currentIndex]._id}`;
+          } else {
+            window.location.href = `/listings/search?search=${
+              encodeURIComponent(
+                suggestions[currentIndex].value
+              )}`;
+          }
+        }
+      }
+      else if(e.key==="Escape"){
+        suggestionsBox.style.display="none";
+        currentIndex=-1;
+      }
+    });
+    function updateSelection(items){
+      items.forEach(item=>item.classList.remove("active"));
+      if(currentIndex>=0){
+        items[currentIndex].classList.add("active");
+        items[currentIndex].scrollIntoView({
+          block:"nearest"
+        });
+      }
+    }
+    document.addEventListener("click",(e)=>{
+      if(
+        !searchInput.contains(e.target) &&
+        !suggestionsBox.contains(e.target)
+      ){
+        suggestionsBox.style.display="none";
+        currentIndex=-1;
+      }
+  });
+  function escapeRegExp(str){
+    return str.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+  }
+
+  const openBtn = document.getElementById("openSearch");
+  const closeBtn = document.getElementById("closeMobileSearch");
+  const navContainer = document.querySelector(".container-fluid");
+
+  openBtn.addEventListener("click", () => {
+      navContainer.classList.add("search-active");
+      searchInput.focus();
+  });
+
+  closeBtn.addEventListener("click", () => {
+      navContainer.classList.remove("search-active");
+      searchInput.value = "";
+      suggestionsBox.style.display = "none";
+      currentIndex = -1;
+  });
+</script>

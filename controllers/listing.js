@@ -1,9 +1,23 @@
 const Listing = require("../models/listing");
 
 //Index Route
-module.exports.index = async(req,res) => {
-    let allListings = await Listing.find({});
-    res.render("listings/index", { allListings });
+module.exports.index = async (req, res) => {
+    const { category } = req.query;
+    let allListings;
+    let error = null;
+    if (!category) {
+        allListings = await Listing.find({});
+    } else {
+        allListings = await Listing.find({ category });
+        if (allListings.length === 0) {
+            error = `No listings found in ${category}.`;
+        }
+    }
+    res.render("listings/index", {
+        allListings,
+        selectedCategory: category || "",
+        error
+    });
 };
 
 //New Route
@@ -56,7 +70,7 @@ module.exports.edit = async(req,res) => {
 };
 
 //Update Route
-module.exports.update = async(req,res) => {
+module.exports.update = async(req ,res) => {
     let {id} = req.params;
     let listing = await Listing.findByIdAndUpdate(id,{...req.body.listing});
     if (typeof req.file !==  "undefined"){
@@ -71,10 +85,83 @@ module.exports.update = async(req,res) => {
 };
 
 //Delete Route
-module.exports.delete = async(req,res) =>{
+module.exports.delete = async(req, res) =>{
     let { id } = req.params;
     let  deletedListing = await Listing.findByIdAndDelete(id);
     console.log(deletedListing);
     req.flash("success", "Listing Deleted!");
     res.redirect("/listings");
+};
+
+//Search Route
+module.exports.search = async(req, res) => {
+    const {search} = req.query;
+    if(!search || search.trim() === ""){
+        req.flash("error", "Please enter a destination!");
+        return res.redirect("/listings");
+    }
+    const allListings = await Listing.find({
+        $or: [
+            { title: { $regex: search, $options: "i"} },
+            { location: { $regex: search, $options: "i"} },
+            { country: { $regex: search, $options: "i"} },
+        ]
+    });
+    if (allListings.length === 0) {
+        req.flash("error", `No listings found for "${search}".`);
+        return res.redirect("/listings");
+    }
+    res.render("listings/index", {allListings, selectedCategory: ""});
+};
+
+//Suggestions Route
+module.exports.suggestions = async (req, res) => {
+    const { search } = req.query;
+    if (!search || search.trim() === "") {
+        return res.json([]);
+    }
+    const regex = new RegExp(search, "i");
+    const listings = await Listing.find({
+        $or: [
+            { title: { $regex: search, $options: "i" } },
+            { location: { $regex: search, $options: "i" } },
+            { country: { $regex: search, $options: "i" } }
+        ]
+    }).select("title location country");
+    const seen = new Set();
+    const suggestions = [];
+    for (const item of listings) {
+        if (regex.test(item.title)) {
+            const key = `title-${item.title.toLowerCase()}`;
+            if (!seen.has(key)) {
+                seen.add(key);
+                suggestions.push({
+                    _id: item._id,
+                    type: "title",
+                    value: item.title
+                });
+            }
+        }
+        if (regex.test(item.location)) {
+            const key = `location-${item.location.toLowerCase()}`;
+            if (!seen.has(key)) {
+                seen.add(key);
+                suggestions.push({
+                    type: "location",
+                    value: item.location
+                });
+            }
+        }
+        if (regex.test(item.country)) {
+            const key = `country-${item.country.toLowerCase()}`;
+            if (!seen.has(key)) {
+                seen.add(key);
+                suggestions.push({
+                    type: "country",
+                    value: item.country
+                });
+            }
+        }
+    }
+    res.json(suggestions.slice(0, 8));
 };

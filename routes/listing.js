@@ -20,6 +20,12 @@ router
         wrapAsync(listingController.create),
     ); 
 
+//Search Route
+router.get("/search", wrapAsync(listingController.search));
+
+//Suggestions Route
+router.get("/suggestions", wrapAsync(listingController.suggestions));
+
 //New Route
 router.get("/new", isLoggedIn, listingController.new);
 
