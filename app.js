@@ -1,6 +1,7 @@
-if (process.env.NODE_ENV != "production") {
-  require("dotenv").config();
-}
+require("dotenv").config();
+
+const dns = require("dns");
+dns.setServers(["8.8.8.8", "1.1.1.1"]);
 
 const express = require("express");
 const app = express();
@@ -19,15 +20,15 @@ const listingsRouter = require("./routes/listing.js");
 const reviewsRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 
-const MONGO_URL = "mongodb://127.0.0.1:27017/StayFinder";
+const MONGO_URL = process.env.MONGO_URL;
 
-main()
-  .then(() => {
-    console.log("connected to DB");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+// main()
+//   .then(() => {
+//     console.log("connected to DB");
+//   })
+//   .catch((err) => {
+//     console.log(err);
+//   });
 
 async function main() {
   await mongoose.connect(MONGO_URL);
@@ -41,7 +42,7 @@ app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
 
 const sessionOptions = {
-  secret: "mysupersecretcode",
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
   cookie: {
@@ -85,6 +86,17 @@ app.use((err, req, res, next) => {
   res.status(statusCode).render("error.ejs", { message });
 });
 
-app.listen(8080, () => {
-  console.log("server is listening to port 8080");
-});
+const PORT = process.env.PORT || 8080;
+
+main()
+  .then(() => {
+    console.log("Connected to MongoDB Atlas");
+
+    app.listen(PORT, () => {
+      console.log(`Server is listening on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.log("MongoDB connection failed:");
+    console.log(err);
+  });
